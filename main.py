@@ -89,6 +89,37 @@ def logout():
 def home():
    return render_template("make.html")	
 	
+@app.route('/', methods=['POST'])
+def upload_image():
+	if 'file' not in request.files:
+		flash('No file part')
+		return redirect(request.url)
+	file = request.files['file']
+	if file.filename == '':
+		flash('No image selected for uploading')
+		return redirect(request.url)
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+		image2 = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		image = cv2.cvtColor(image2 , cv2.COLOR_RGB2GRAY)
+		dst = cv2.GaussianBlur(image, (3, 3), cv2.BORDER_DEFAULT, 0.5)
+		laplacian = cv2.Laplacian(dst, -10, 3)
+		laplacian = 255 - laplacian
+
+		#edgesImage = cv2.Canny(image, 0.3, 0.8, 3)
+		data = Image.fromarray(laplacian)
+		data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+		return render_template('make.html', filename=filename)
+	else:
+		flash('Allowed image types are -> png, jpg, jpeg, gif')
+		return redirect(request.url)   
+
+@app.route('/display/<filename>')
+def display_image(filename):
+	return redirect(url_for('static', filename='uploads/' + filename), code=301)        
 
 if __name__ == '__main__':
     app.run()   
