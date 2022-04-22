@@ -1,14 +1,23 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <form action="" method = "POST">
-        <p>email <input type = "email" name = "email" /></p>
-        <p>password <input type = "password" name = "password" /></p>
-        <p> submit <input type = "submit" value = "Submit" /></p>
-    </form>
-     
-    <h3>Dont Have an account??</h3>
-    <h3><a href = "{{url_for('register') }}">Register Here</a></h3>
+{% extends "index.html" %}
 
-</body>
-</html>
+{% block style_additions %}
+{% endblock %}
+
+{% block menu %}
+<a class="nav-link" href="/">Create</a>
+<a class="nav-link" href="/discover">Discover</a>
+<a class="nav-link active" aria-current="page" href="/login">Log In</a>
+{% endblock %}
+
+{% block main_content %}
+    <h2>Please log in to your account</h2>
+    <br>
+    <form action="" method = "POST">
+        <div><input type = "email" name = "email" placeholder="email" style="margin-bottom: 20px;width:250px;background-color:#F8F8F8"/></div>
+        <div><input type = "password" name = "password" placeholder="password" style="margin-bottom: 20px;width:250px;background-color:#F8F8F8"/></div>
+        <p><input type = "submit" value = "Log In" style="background-color:#F8F8F8"/></p>
+    </form>
+    <br>
+    <h4>Dont Have an account?</h4>
+    <h5><a style="color:gray" href = "/register">Register Here</a></h5>
+{% endblock %}

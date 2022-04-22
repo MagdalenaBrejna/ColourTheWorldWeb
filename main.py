@@ -1,22 +1,25 @@
-#import os
-#import urllib.request
-
+import os
+import urllib.request
 from flask import Flask, flash, request, redirect, url_for, render_template
-from werkzeug.utils import secure_filename
-#from PIL import Image
-
-#import cv2
-
-#from flask import Flask,render_template,request,redirect
 from flask_login import login_required, current_user, login_user, logout_user
+from werkzeug.utils import secure_filename
 from models import UserModel,db,login
+from PIL import Image
+import cv2
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+UPLOAD_FOLDER = 'static/uploads/'
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
  
 app = Flask(__name__)
 app.secret_key = 'xyz'
- 
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
- 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
  
 db.init_app(app)
 login.init_app(app)
@@ -72,25 +75,16 @@ def logout():
     logout_user()
     return redirect('/blogs')
 
+
+@app.route('/')
+def home():
+   return render_template("make.html")	
+	
+
 if __name__ == '__main__':
     app.run()   
 
-'''
-from flask import Blueprint
-#from . import db
 
-#from . import db
-
-main = Blueprint('main', __name__)
-
-@main.route('/')
-def index():
-    return 'Index'
-
-@main.route('/profile')
-def profile():
-    return 'Profile'
-'''
 '''
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
