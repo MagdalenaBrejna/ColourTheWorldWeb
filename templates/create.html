@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+
+{% block style_additions %}
+{% endblock %}
+
+{% block menu %}
+<a class="nav-link active" aria-current="page" href="/create">Create</a>
+<a class="nav-link" href="/projects">Your Projects</a>
+<a class="nav-link" href="/logout">Log Out</a>
+{% endblock %}
+
+{% block main_content %}
+<p></p>
+<h1>Create your own colouring book</h1>
+<h3>Select a file to upload</h3>
+<p></p>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+{% if filename %}
+	<div>
+		<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
+		<p></p>
+	</div>
+{% endif %}
+<form method="post" action="/" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="file" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Create">
+	</p>
+</form>
+{% endblock %}

@@ -29,30 +29,39 @@ login.login_view = 'login'
 def create_all():
     db.create_all()
      
-@app.route('/blogs')
+
+@app.route('/projects')
 @login_required
-def blog():
-    return render_template('blog.html')
- 
+def projects():
+    return render_template('projects.html')	
+
+@app.route('/discover')
+def discover():
+    return render_template('discover.html')	
+
+@app.route('/create')
+@login_required
+def create():
+    return render_template('create.html')		 
  
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
     if current_user.is_authenticated:
-        return redirect('/blogs')
+        return redirect('/projects')
      
     if request.method == 'POST':
         email = request.form['email']
         user = UserModel.query.filter_by(email = email).first()
         if user is not None and user.check_password(request.form['password']):
             login_user(user)
-            return redirect('/blogs')
+            return redirect('/projects')
      
     return render_template('login.html')
  
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if current_user.is_authenticated:
-        return redirect('/blogs')
+        return redirect('/projects')
      
     if request.method == 'POST':
         email = request.form['email']
@@ -73,7 +82,7 @@ def register():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect('/blogs')
+    return redirect('/projects')
 
 
 @app.route('/')

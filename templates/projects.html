@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block style_additions %}
+{% endblock %}
+
+{% block menu %}
+<a class="nav-link" href="/create">Create</a>
+<a class="nav-link active" aria-current="page" href="/projects">Your Projects</a>
+<a class="nav-link" href="/logout">Log Out</a>
+{% endblock %}
+
+{% block main_content %}
+    <h2>Your Projects</h2>
+    <h3>Hi {{ current_user.username }}</h3>
+{% endblock %}
