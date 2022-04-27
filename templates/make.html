@@ -1,6 +1,19 @@
 {% extends "index.html" %}
 
 {% block style_additions %}
+
+<link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/basic.css" />
+    <link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.css" />
+    <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.js"></script>
+    <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone-amd-module.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      Dropzone.options.dropzone = { 
+        addRemoveLinks: true,
+		maxFiles: 1,
+		
+      };
+    </script>
 {% endblock %}
 
 {% block menu %}
@@ -26,19 +39,15 @@
 	{% endwith %}
 </p>
 {% if filename %}
-	<div>
-		<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
-		<p></p>
-	</div>
+<div>
+	<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
+	<p></p>
+</div>	
 {% endif %}
-<form method="post" action="/" enctype="multipart/form-data">
-    <dl>
-		<p>
-			<input type="file" name="file" autocomplete="off" required>
-		</p>
-    </dl>
-    <p>
-		<input type="submit" value="Create">
-	</p>
+
+<form action="/" class="dropzone" id="dropzone">
+	
 </form>
+
+
 {% endblock %}
