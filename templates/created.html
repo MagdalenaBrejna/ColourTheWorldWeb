@@ -1,12 +1,26 @@
 {% extends "index.html" %}
 
 {% block style_additions %}
+<script>
+	function getFile() {
+		//var imgVal = $("#dropzone").val();
+		//$('#img').attr('src', imgVal);
+		//console.log("1")
+		//var imgVal = document.getElementById("img1").
+		//document.getElementById("inp_img1").value = imgVal
+		//console.log(imgVal)
+		//$('#formFile').attr('value', this.value)
+	}
+</script>
+
 {% endblock %}
 
 {% block menu %}
 <a class="nav-link active" aria-current="page" href="#">Create</a>
 <a class="nav-link" href="/discover">Discover</a>
 <a class="nav-link" href="/login">Log In</a>
+
+
 {% endblock %}
 
 {% block main_content %}
@@ -24,8 +38,19 @@
 	
 	{% endwith %}
 </p>
-{% if filename %}
-<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
 
+{% if filename %}
+<form method=post action="{{ url_for('share_project') }}" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<img id="img1" src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px" >
+			<input type="hidden" name="image" id="inp_img1" src="{{ url_for('display_image', filename=filename) }}" value="{{ url_for('display_image', filename=filename) }}">
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Share" onmouseenter="getFile()">
+	</p>
+</form>	
 {% endif %}
+
 {% endblock %}

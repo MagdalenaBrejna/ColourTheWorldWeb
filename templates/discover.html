@@ -10,5 +10,25 @@
 {% endblock %}
 
 {% block main_content %}
+<br><br>
 <h1>Find a colouring book!</h1>
+
+<div class="container" width="600" style="margin-left: 30px">
+    <table class="table table-striped" width="500">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for img in images %}  
+          <tr>
+            <td style="margin-left: 30px"><img src="{{ img }}" width="500"/></td>
+          </tr>
+          {% endfor %} 
+        </tbody>
+    </table>  
+    </div>
+
 {% endblock %}

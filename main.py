@@ -3,7 +3,7 @@ import urllib.request
 from flask import Flask, flash, request, redirect, url_for, render_template,send_file
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
-from models import UserModel,db,login
+from models import UserModel,db,login,ImageModel
 from PIL import Image
 import cv2
 
@@ -89,9 +89,21 @@ def home():
 def projects():
     return render_template('projects.html')	
 
+def convert_data(data, file_name):
+    with open(file_name, 'wb') as file:
+        file.write(data)
+        return file.name
+
+
 @app.route('/discover')
 def discover():
-    return render_template('discover.html')	
+    images2 = []
+    allimages = ImageModel.query.all()
+    for mimg in allimages:
+        images2.append(convert_data(mimg.img, "static\\img" + str(mimg.id) + ".jpg"))
+
+    return render_template('discover.html', images=images2)
+    #return render_template('discover.html')	
 
 @app.route('/create')
 @login_required
@@ -140,6 +152,31 @@ def show_created():
 @app.route('/created')
 def show_created_temp():
     return render_template('created.html')
+
+def convertToBinaryData(filename):
+    with open(filename, 'rb') as file:
+        blobData = file.read()
+    return blobData    
+
+@app.route('/share', methods=['POST'])
+def share_project(): 
+    filename = request.form.get("image")
+    #photo = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    empPhoto = convertToBinaryData("static\\uploads\\" + filename)
+
+    if ImageModel.query.filter_by(title=filename[1:]).first():
+            return ('Project already Present')
+
+    image = ImageModel(title=filename[1:], img=empPhoto)
+    db.session.add(image)
+    db.session.commit()
+    #return redirect(request.url, filename)   
+    return render_template('created.html', filename=filename[1:])
+
+@app.route('/share')
+def shared(filename):
+    return render_template('created.html', filename=filename)
+    
 
 if __name__ == '__main__':
     app.run()   
