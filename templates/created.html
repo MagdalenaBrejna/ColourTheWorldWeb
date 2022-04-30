@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block style_additions %}
+{% endblock %}
+
+{% block menu %}
+<a class="nav-link active" aria-current="page" href="#">Create</a>
+<a class="nav-link" href="/discover">Discover</a>
+<a class="nav-link" href="/login">Log In</a>
+{% endblock %}
+
+{% block main_content %}
+<p></p>
+<h1>Your project: {{ filename }}</h1>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	
+	{% endwith %}
+</p>
+{% if filename %}
+<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
+
+{% endif %}
+{% endblock %}

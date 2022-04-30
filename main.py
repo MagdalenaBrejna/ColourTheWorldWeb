@@ -1,11 +1,12 @@
 import os
 import urllib.request
-from flask import Flask, flash, request, redirect, url_for, render_template
+from flask import Flask, flash, request, redirect, url_for, render_template,send_file
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
 from models import UserModel,db,login
 from PIL import Image
 import cv2
+
 
 from flask_dropzone import Dropzone
 dropzone = Dropzone()
@@ -36,7 +37,7 @@ login.login_view = 'login'
 @app.before_first_request
 def create_all():
     db.create_all() 
- 
+
 #security 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -125,9 +126,22 @@ def upload_image():
 		flash('Allowed image types are -> png, jpg, jpeg, gif')
 		return redirect(request.url)   
 
-@app.route('/display/<filename>')
+@app.route('/<filename>')
 def display_image(filename):
-	return redirect(url_for('static', filename='uploads/' + filename), code=301)        
+    return send_file("static\\uploads\\" + filename)
+
+      
+@app.route('/created', methods=['POST'])
+def show_created():
+    filename = request.form.get("image")
+    return render_template('created.html', filename=filename)
+   
+
+@app.route('/created')
+def show_created_temp():
+    return render_template('created.html')
 
 if __name__ == '__main__':
     app.run()   
+
+

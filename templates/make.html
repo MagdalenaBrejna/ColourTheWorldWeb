@@ -11,13 +11,28 @@
       Dropzone.options.dropzone = { 
         addRemoveLinks: true,
 		maxFiles: 1,
+		accept: function(file, done) {
+            console.log(file);
+			document.getElementById("formFile").value=file.name;
+			done();
+            }
 		
       };
     </script>
+	
+	<script>
+		function getFile() {
+			//var imgVal = $("#dropzone").val();
+			//$('#img').attr('src', imgVal);
+			//console.log("1")
+			document.getElementById("formFile").value = this.value
+			//$('#formFile').attr('value', this.value)
+		}
+	</script>
 {% endblock %}
 
 {% block menu %}
-<a class="nav-link active" aria-current="page" href="#">Create</a>
+<a class="nav-link active" aria-current="page" href="#" onload="getFile()">Create</a>
 <a class="nav-link" href="/discover">Discover</a>
 <a class="nav-link" href="/login">Log In</a>
 {% endblock %}
@@ -38,16 +53,19 @@
 	  {% endif %}
 	{% endwith %}
 </p>
-{% if filename %}
-<div>
-	<img src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px">
-	<p></p>
-</div>	
-{% endif %}
 
 <form action="/" class="dropzone" id="dropzone">
 	
 </form>
-
+<form method=post action="{{ url_for('show_created') }}" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="hidden" name="image" id="formFile">
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Create" >
+	</p>
+</form>	
 
 {% endblock %}
