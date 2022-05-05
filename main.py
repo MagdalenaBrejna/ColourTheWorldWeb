@@ -129,7 +129,6 @@ def upload_image():
 		laplacian = cv2.Laplacian(dst, -10, 3)
 		laplacian = 255 - laplacian
 
-		#edgesImage = cv2.Canny(image, 0.3, 0.8, 3)
 		data = Image.fromarray(laplacian)
 		data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -161,16 +160,16 @@ def convertToBinaryData(filename):
 @app.route('/share', methods=['POST'])
 def share_project(): 
     filename = request.form.get("image")
-    #photo = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
     empPhoto = convertToBinaryData("static\\uploads\\" + filename)
 
     if ImageModel.query.filter_by(title=filename[1:]).first():
-            return ('Project already Present')
+        flash('Project already Present')
+        return render_template('created.html', filename=filename[1:])
 
     image = ImageModel(title=filename[1:], img=empPhoto)
     db.session.add(image)
     db.session.commit()
-    #return redirect(request.url, filename)   
+     
     return render_template('created.html', filename=filename[1:])
 
 @app.route('/share')
