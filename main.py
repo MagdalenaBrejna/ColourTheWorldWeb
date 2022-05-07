@@ -4,6 +4,7 @@ from flask import Flask, flash, request, redirect, url_for, render_template,send
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.utils import secure_filename
 from models import UserModel,db,login,ImageModel
+from models import UserImageModel
 from PIL import Image
 import cv2
 
@@ -24,6 +25,7 @@ dropzone.init_app(app)
 app.secret_key = 'xyz'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/projekt'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -43,14 +45,14 @@ def create_all():
 def login():
     if current_user.is_authenticated:
         return redirect('/projects')
-     
+            
     if request.method == 'POST':
         email = request.form['email']
         user = UserModel.query.filter_by(email = email).first()
         if user is not None and user.check_password(request.form['password']):
             login_user(user)
             return redirect('/projects')
-     
+                
     return render_template('login.html')
  
 @app.route('/register', methods=['POST', 'GET'])
@@ -151,6 +153,32 @@ def show_created():
 @app.route('/created')
 def show_created_temp():
     return render_template('created.html')
+
+@app.route('/save', methods=['POST'])
+def save_project():
+    filename = request.form.get("image2")
+    if not current_user.is_authenticated:
+        flash("You must be logged in")
+        return redirect('/login')
+
+    empPhoto = convertToBinaryData("static\\uploads\\" + filename)
+    user_projects = UserImageModel.query.all()
+    for project in user_projects:
+        print(str(project.title) + ' ' + str(project.id) + "\n")
+        if project.title == filename[1:] and project.user == current_user.id:
+            flash("Project exists")
+            return render_template('created.html', filename=filename[1:])
+                
+    new_project = UserImageModel(title=filename[1:], img=empPhoto, user=current_user.id)
+    db.session.add(new_project)
+    db.session.commit()
+
+    return redirect('/projects')               
+    
+
+#@app.route('/save')
+#def get_save():
+#    print("!")  
 
 def convertToBinaryData(filename):
     with open(filename, 'rb') as file:
