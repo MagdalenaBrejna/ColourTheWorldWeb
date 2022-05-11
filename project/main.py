@@ -45,9 +45,12 @@ app.register_blueprint(auth)
 from overlook import look
 app.register_blueprint(look)
 
+from store import store
+app.register_blueprint(store)
+
 login.login_view = 'auth.login'
 
-from flask import send_from_directory
+#from flask import send_from_directory
 
 #@app.route('/favicon.ico')
 #def favicon():
@@ -107,6 +110,7 @@ def display_image(filename):
 def show_created_temp():
     return render_template('created.html')
 
+'''
 @app.route('/save', methods=['POST'])
 def save_project():
     filename = request.form.get("image2")
@@ -152,7 +156,7 @@ def share_project():
 def shared(filename):
     return render_template('created.html', filename=filename)
     
-
+'''
 
 if __name__ == '__main__':
     app.run()   
