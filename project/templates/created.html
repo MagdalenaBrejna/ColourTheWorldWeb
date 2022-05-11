@@ -41,18 +41,18 @@
 
 {% if filename %}
 
-<img id="img1" src="{{ url_for('display_image', filename=filename) }}" style="height: 400px;width:400px" >
+<img id="img1" src="{{ url_for('create_img.display_image', filename=filename) }}" style="height: 400px;width:400px" >
 <div class="container">
 	<div class="row">
 		<div class="col-sm-1" style="margin-left: 210px;margin-top:20px">
 			<form method=post action="{{ url_for('store.share_project') }}" enctype="multipart/form-data">	
-				<input type="hidden" name="image" id="inp_img1" src="{{ url_for('display_image', filename=filename) }}" value="{{ url_for('display_image', filename=filename) }}">
+				<input type="hidden" name="image" id="inp_img1" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
 				<input type="submit" value="Share" style="width:70px">	
 			</form>
 		</div>
 		<div class="col-sm-1" style="margin-left: 40px;margin-top:20px">	
 			<form method=post action="{{ url_for('store.save_project') }}" enctype="multipart/form-data">
-				<input type="hidden" name="image2" id="inp_img2" src="{{ url_for('display_image', filename=filename) }}" value="{{ url_for('display_image', filename=filename) }}">
+				<input type="hidden" name="image2" id="inp_img2" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
 				<input type="submit" value="Save" style="width:70px">	
 			</form>
 		</div>

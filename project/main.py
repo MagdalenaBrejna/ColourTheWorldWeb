@@ -1,9 +1,8 @@
 import os
 from flask import Flask, flash, request, redirect, render_template, send_file
-from flask_login import login_required, current_user
+from flask_login import login_required
 from werkzeug.utils import secure_filename
-from models import db, login, ImageModel
-from models import UserImageModel
+from models import db, login
 from PIL import Image
 import cv2
 
@@ -12,11 +11,8 @@ from flask_dropzone import Dropzone
 dropzone = Dropzone()
 
 #configuration
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-UPLOAD_FOLDER = 'project/static/uploads/'
-
-def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+#UPLOAD_FOLDER = 'project/static/uploads/'
  
 app = Flask(__name__)
 dropzone.init_app(app)
@@ -26,7 +22,7 @@ app.secret_key = 'xyz'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/projekt'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['DROPZONE_MAX_FILES'] = 1
 
@@ -48,21 +44,15 @@ app.register_blueprint(look)
 from store import store
 app.register_blueprint(store)
 
+from create import create_img
+app.register_blueprint(create_img)
+
 login.login_view = 'auth.login'
-
-#from flask import send_from_directory
-
-#@app.route('/favicon.ico')
-#def favicon():
-#    return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
-
-#pages
-
 
 @app.route('/')
 def home():
    return render_template("make.html")	
-
+'''
 @app.route('/create')
 @login_required
 def create():
@@ -109,56 +99,7 @@ def display_image(filename):
 @app.route('/created')
 def show_created_temp():
     return render_template('created.html')
-
-'''
-@app.route('/save', methods=['POST'])
-def save_project():
-    filename = request.form.get("image2")
-    if not current_user.is_authenticated:
-        flash("You must be logged in")
-        return redirect('/login')
-
-    empPhoto = convertToBinaryData("project\\static\\uploads\\" + filename[1:])
-    user_projects = UserImageModel.query.all()
-    for project in user_projects:
-        print(str(project.title) + ' ' + str(project.id) + "\n")
-        if project.title == filename[1:] and project.user == current_user.id:
-            flash("Project exists")
-            return render_template('created.html', filename=filename[1:])
-                
-    new_project = UserImageModel(title=filename[1:], img=empPhoto, user=current_user.id)
-    db.session.add(new_project)
-    db.session.commit()
-
-    return redirect('/projects')                   
-
-def convertToBinaryData(filename):
-    with open(filename, 'rb') as file:
-        blobData = file.read()
-    return blobData    
-
-@app.route('/share', methods=['POST'])
-def share_project(): 
-    filename = request.form.get("image")
-    empPhoto = convertToBinaryData("project\\static\\uploads\\" + filename)
-
-    if ImageModel.query.filter_by(title=filename[1:]).first():
-        flash('Project already Present')
-        return render_template('created.html', filename=filename[1:])
-
-    image = ImageModel(title=filename[1:], img=empPhoto)
-    db.session.add(image)
-    db.session.commit()
-     
-    return render_template('created.html', filename=filename[1:])
-
-@app.route('/share')
-def shared(filename):
-    return render_template('created.html', filename=filename)
-    
 '''
 
 if __name__ == '__main__':
     app.run()   
-
-
