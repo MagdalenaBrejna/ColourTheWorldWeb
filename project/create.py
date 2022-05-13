@@ -1,9 +1,8 @@
 import os
 from flask import Blueprint
-from flask import Flask, flash, request, redirect, render_template, send_file
+from flask import flash, request, redirect, render_template, send_file
 from flask_login import login_required
 from werkzeug.utils import secure_filename
-from models import db, login
 from PIL import Image
 import cv2
 
@@ -12,10 +11,12 @@ create_img = Blueprint('create_img', __name__)
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = 'project/static/uploads/'
 
-#create.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@create_img.route('/')
+def home():
+   return render_template("make.html")	
 
 @create_img.route('/create')
 @login_required
