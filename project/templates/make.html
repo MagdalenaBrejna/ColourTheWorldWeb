@@ -6,17 +6,30 @@
     <link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.css" />
     <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.js"></script>
     <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone-amd-module.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./style.css" type="text/css">
     <script>
       Dropzone.options.dropzone = { 
         addRemoveLinks: true,
+		
 		maxFiles: 1,
 		accept: function(file, done) {
             console.log(file);
 			document.getElementById("formFile").value=file.name;
 			done();
-            }
-		
+            },
+		resize: function(file) { // thumbnail keep image ratio
+			var resizeInfo = {
+			srcX: 0,
+			srcY: 0,
+			trgX: 0,
+			trgY: 0,
+			srcWidth: file.width,
+			srcHeight: file.height,
+			trgWidth: this.options.thumbnailWidth,
+			trgHeight: this.options.thumbnailHeight
+			};
+			return resizeInfo;
+		}
       };
     </script>
 	

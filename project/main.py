@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, send_from_directory
 from models import db, login
 from flask_dropzone import Dropzone
 import os
