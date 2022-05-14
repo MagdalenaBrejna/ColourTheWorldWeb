@@ -1,7 +1,10 @@
 from flask import Blueprint
-from flask import render_template
+from flask import redirect, flash, render_template
 from flask_login import login_required
 from models import ImageModel
+from tkinter import filedialog
+from tkinter import *
+import os
 
 look = Blueprint('look', __name__)
 
@@ -12,17 +15,25 @@ def projects():
 
 @look.route('/discover')
 def discover():
+    return render_template('discover.html', images=get_published_images())	
+
+def get_published_images():
     images2 = []
     allimages = ImageModel.query.all()
     for mimg in allimages:
         images2.append(convert_data(mimg.img, mimg.title))
-    return render_template('discover.html', images=images2)	
+    return images2   
 
 def convert_data(data, file_name):
     with open(file_name, 'wb') as file:
         file.write(data)
         return file.name
-        
 
-
-       
+@look.route('/download/<filename>', methods=['POST'])
+def download(filename):
+    win = Tk()
+    folder_selected = filedialog.askdirectory()
+    image = ImageModel.query.filter_by(title = filename).first()
+    with open(os.path.join(folder_selected, filename), 'wb') as file:
+        file.write(image.img)
+    return render_template('discover.html', images=get_published_images())	    

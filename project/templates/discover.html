@@ -1,6 +1,11 @@
 {% extends "index.html" %}
 
 {% block style_additions %}
+<script>
+  function getImage() {
+    document.getElementById("image").value = document.getElementById("selected").value;
+  }
+  </script>
 {% endblock %}
 
 {% block menu %}
@@ -10,6 +15,17 @@
 {% endblock %}
 
 {% block main_content %}
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
 
 <div class="container" >
   <div class="row justify-content-center">
@@ -20,8 +36,11 @@
     </div>
     {% for i in images %}
     <div class="col-lg-3" style="margin-right:50px">
+      <form method=post action="{{ url_for('look.download', filename=i) }}" enctype="multipart/form-data">
       <div class="card" style="margin-bottom:20px;width:180px;height:180px">
-        <img class="card-img-top" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px">
+        <input type="hidden" name="image" id="image" src="{{ url_for('look.download', filename=i) }}" value="{{ url_for('look.download', filename=i) }}">
+        <input id="selected" type="image" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px" onmouseenter="getImage()"/>
+      </form>
       </div>
     </div>
     {% endfor %}
