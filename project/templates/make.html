@@ -2,7 +2,7 @@
 
 {% block style_additions %}
 
-<link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/basic.css" />
+	<link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/basic.css" />
     <link data-require="dropzone@4.0.1" data-semver="4.0.1" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.css" />
     <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone.js"></script>
     <script data-require="dropzone@4.0.1" data-semver="4.0.1" src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/dropzone-amd-module.js"></script>
@@ -30,6 +30,7 @@
 			};
 			return resizeInfo;
 		}
+		
       };
     </script>
 	
@@ -53,7 +54,7 @@
 {% block main_content %}
 <p></p>
 <h1>Create your own colouring book</h1>
-<h3>Select a file to upload</h3>
+<br>
 <p></p>
 <p>
 	{% with messages = get_flashed_messages() %}
@@ -67,8 +68,9 @@
 	{% endwith %}
 </p>
 
-<form action="/" class="dropzone" id="dropzone">
-	
+<form action="/" class="dropzone" id="dropzone" style="height:300px;color:rgb(198, 196, 196);border-style:dashed">
+	<div class="dz-message" data-dz-message style="font-size:20px;margin-top: 30px;padding-top: 80px;"><span style="color:rgba(128, 128, 128, 0.712)">Drop files here to upload</span></div>
+		
 </form>
 <form method=post action="{{ url_for('create_img.show_created') }}" enctype="multipart/form-data">
     <dl>

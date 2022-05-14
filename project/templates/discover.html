@@ -10,25 +10,22 @@
 {% endblock %}
 
 {% block main_content %}
-<br><br>
-<h1>Find a colouring book!</h1>
 
-<div class="container" width="600" style="margin-left: 30px">
-    <table class="table table-striped" width="500">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Image</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for img in images %}  
-          <tr>
-            <td style="margin-left: 30px"><img src="{{ img }}" width="500"/></td>
-          </tr>
-          {% endfor %} 
-        </tbody>
-    </table>  
+<div class="container" >
+  <div class="row justify-content-center">
+    <div class="col-lg-12 text-center">
+      <div class="jumbotron text-center p-4">
+        <h2>Find a colouring!</h2>
+      </div>
     </div>
+    {% for i in images %}
+    <div class="col-lg-3" style="margin-right:50px">
+      <div class="card" style="margin-bottom:20px;width:180px;height:180px">
+        <img class="card-img-top" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px">
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock %}
