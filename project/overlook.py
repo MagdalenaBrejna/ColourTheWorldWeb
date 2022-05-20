@@ -31,9 +31,14 @@ def convert_data(data, file_name):
 
 @look.route('/download/<filename>', methods=['POST'])
 def download(filename):
-    win = Tk()
-    folder_selected = filedialog.askdirectory()
     image = ImageModel.query.filter_by(title = filename).first()
-    with open(os.path.join(folder_selected, filename), 'wb') as file:
+    with open(os.path.join(getUserDirectoryPath(), filename), 'wb') as file:
         file.write(image.img)
-    return render_template('discover.html', images=get_published_images())	    
+    return render_template('discover.html', images=get_published_images())
+
+def getUserDirectoryPath():
+    win = Tk()
+    win.withdraw()
+    win.attributes('-topmost', True)
+    folder_selected = filedialog.askdirectory()
+    return folder_selected
