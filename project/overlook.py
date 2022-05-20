@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template,redirect
 from flask_login import login_required
-from models import SharedImageModel, db
+from models import SharedImageModel, UserImageModel, db
 from tkinter import filedialog
 from tkinter import *
+from flask_login import current_user
 import os
 
 # application module for colouring overlook
@@ -10,11 +11,29 @@ import os
 # create look blueprint that is registered in the main module
 look = Blueprint('look', __name__)
 
-# projects overlook request. todo...
+# projects overlook request. Send user saved colouring books to browser.
 @look.route('/projects')
 @login_required
 def projects():
-    return render_template('projects.html')	
+    return render_template('projects.html', images=get_user_images())	
+
+# get user private coloring books stored in the database converted from binary into files
+def get_user_images():
+    images2 = []
+    allimages = UserImageModel.query.all()
+    for mimg in allimages:
+        if mimg.user == current_user.id:
+            images2.append(convert_data(mimg.img, mimg.title))
+    return images2      
+
+# save a user colouring book selected by a user into a selected directory
+@look.route('/get/<filename>')
+def download_user(filename):
+    image = UserImageModel.query.filter_by(user=current_user.id, title=filename).first()
+    with open(os.path.join(getUserDirectoryPath(), filename), 'wb') as file:
+        file.write(image.img)
+    return render_template('projects.html', images=get_user_images())
+
 
 # public projects overview request. It calls render proper tamplate with images stored in the database.
 @look.route('/discover')
