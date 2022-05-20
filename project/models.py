@@ -30,6 +30,43 @@ class UserModel(UserMixin, db.Model):
 def load_user(id):
     return UserModel.query.get(int(id))
 
+class ImageModel(db.Model):
+    __tablename__ = 'all_images'
+
+    id = Column(db.Integer, primary_key=True)
+    title = Column(db.String(50))
+    img = Column(db.String(200))
+    type = Column(db.String(50))     
+
+    __mapper_args__ = {
+        'polymorphic_identity':'all_images',
+        'polymorphic_on':type
+    }
+
+class SharedImageModel(ImageModel):
+    __tablename__ = 'public_images'
+
+    id = Column(db.Integer, db.ForeignKey('all_images.id'), primary_key=True)
+    #title = Column(db.String(50))
+    #img = Column(db.String(200))    
+
+    __mapper_args__ = {
+        'polymorphic_identity':'shared',
+    } 
+
+class UserImageModel(ImageModel):
+    __tablename__ = 'private_images'
+
+    id = Column(db.Integer,  db.ForeignKey('all_images.id'), primary_key=True)
+    #title = Column(db.String(50))
+    #img = Column(db.String(200))
+    user = Column(db.Integer, db.ForeignKey('users.id')) 
+
+    __mapper_args__ = {
+        'polymorphic_identity':'user'
+    }    
+
+'''
 # class that builds an image table schema for images shered by users to other
 class ImageModel(db.Model):
     __tablename__ = 'shared_images'
@@ -46,3 +83,4 @@ class UserImageModel(db.Model):
     title = Column(db.String(50))
     img = Column(db.String(200))
     user = Column(db.Integer, db.ForeignKey('users.id'))   
+    '''

@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, request, redirect, render_template
-from models import db, ImageModel, UserImageModel
+from models import db, SharedImageModel, UserImageModel
 from flask_login import current_user
 
 # application module for processing storing a colouring book
@@ -23,7 +23,6 @@ def save_project():
 
     # make sure that this user project doesn't exist. 
     for project in user_projects:
-        print(str(project.title) + ' ' + str(project.id) + "\n")
         if project.title == filename[1:] and project.user == current_user.id:
             flash("Project exists")
             return render_template('created.html', filename=filename[1:])
@@ -50,12 +49,12 @@ def share_project():
     empPhoto = convertToBinaryData("project\\static\\uploads\\" + filename)
 
     # make sure that this user project doesn't exist. 
-    if ImageModel.query.filter_by(title=filename[1:]).first():
+    if SharedImageModel.query.filter_by(title=filename[1:]).first():
         flash('Project already Present')
         return render_template('created.html', filename=filename[1:])
 
     # create a new instance of ImageModel to save a colouring book in the database as a public project that can be downloaded by other users
-    image = ImageModel(title=filename[1:], img=empPhoto)
+    image = SharedImageModel(title=filename[1:], img=empPhoto)
     db.session.add(image)
     db.session.commit()
      

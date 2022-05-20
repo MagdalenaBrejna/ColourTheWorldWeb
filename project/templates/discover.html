@@ -3,7 +3,11 @@
 {% block style_additions %}
 <script>
   function getImage() {
-    document.getElementById("image").value = document.getElementById("selected").value;
+   // document.getElementById("image").value = document.getElementById("selected").value;
+  }
+  function deleteImage() {
+  //  document.getElementById("image").value = null;
+  //  document.getElementById("selected").value = null;
   }
   </script>
 {% endblock %}
@@ -27,7 +31,7 @@
 	{% endwith %}
 </p>
 
-<div class="container" >
+<div class="container" onload="deleteImage()">
   <div class="row justify-content-center">
     <div class="col-lg-12 text-center">
       <div class="jumbotron text-center p-4">
@@ -36,12 +40,12 @@
     </div>
     {% for i in images %}
     <div class="col-lg-3" style="margin-right:50px">
-      <form method=post action="{{ url_for('look.download', filename=i) }}" enctype="multipart/form-data">
-      <div class="card" style="margin-bottom:20px;width:180px;height:180px">
-        <input type="hidden" name="image" id="image" src="{{ url_for('look.download', filename=i) }}" value="{{ url_for('look.download', filename=i) }}">
-        <input id="selected" type="image" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px" onmouseenter="getImage()"/>
-      </form>
-      </div>
+      <form  action="{{ url_for('look.download', filename=i) }}" enctype="multipart/form-data">
+        <div class="card" style="margin-bottom:20px;width:180px;height:180px">
+          <input type="hidden" name="image" id="image" src="{{ url_for('look.download', filename=i) }}" value="{{ url_for('look.download', filename=i) }}">
+          <input id="selected" type="image" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px" onmouseenter="getImage()"/>
+        </div>
+    </form>
     </div>
     {% endfor %}
   </div>

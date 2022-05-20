@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template,redirect
 from flask_login import login_required
-from models import ImageModel
+from models import SharedImageModel, db
 from tkinter import filedialog
 from tkinter import *
 import os
@@ -24,7 +24,7 @@ def discover():
 # get public coloring books stored in the database converted from binary into files
 def get_published_images():
     images2 = []
-    allimages = ImageModel.query.all()
+    allimages = SharedImageModel.query.all()
     for mimg in allimages:
         images2.append(convert_data(mimg.img, mimg.title))
     return images2   
@@ -36,9 +36,9 @@ def convert_data(data, file_name):
         return file.name
 
 # save a colouring book selected by a user into a selected directory
-@look.route('/download/<filename>', methods=['POST'])
+@look.route('/download/<filename>')
 def download(filename):
-    image = ImageModel.query.filter_by(title = filename).first()
+    image = SharedImageModel.query.filter_by(title = filename).first()
     with open(os.path.join(getUserDirectoryPath(), filename), 'wb') as file:
         file.write(image.img)
     return render_template('discover.html', images=get_published_images())
@@ -48,4 +48,7 @@ def getUserDirectoryPath():
     win = Tk()
     win.withdraw()
     win.attributes('-topmost', True)
-    return filedialog.askdirectory()
+    directory = filedialog.askdirectory()
+    win.destroy()
+    return directory
+  
