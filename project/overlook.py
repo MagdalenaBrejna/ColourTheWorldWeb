@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template,redirect
+from flask import Blueprint, render_template,request
 from flask_login import login_required
 from models import SharedImageModel, UserImageModel, db
 from tkinter import filedialog
 from tkinter import *
 from flask_login import current_user
 import os
+from PIL import Image
 
 # application module for colouring overlook and download
 
@@ -62,11 +63,24 @@ def download(filename):
 def show_published():
     return render_template('published.html', images=get_published_images())
 
+# save a colouring book selected by a user into a selected directory
 @look.route('/public/<filename>')
 def download_published(filename):
     image = SharedImageModel.query.filter_by(title=filename).first()
     save_project(image, filename)
     return render_template('published.html', images=get_published_images())
+
+
+
+# save a colouring book into a selected directory
+@look.route('/saveproject', methods=['POST'])
+def download_project():
+    image = request.form.get("image_to_download")
+    with open("project\\static\\uploads\\" + image[1:], 'rb') as file:
+        img = file.read()
+    with open(os.path.join(getUserDirectoryPath(), image[1:]), 'wb') as file:
+        file.write(img)
+    return render_template('created.html', filename=image[1:])
 
 
 

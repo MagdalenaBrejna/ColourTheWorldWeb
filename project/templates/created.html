@@ -44,16 +44,22 @@
 <img id="img1" src="{{ url_for('create_img.display_image', filename=filename) }}" style="height: 400px;width:400px" >
 <div class="container">
 	<div class="row">
-		<div class="col-sm-1" style="margin-left: 210px;margin-top:20px">
+		<div class="col-sm-1" style="margin-left: 150px;margin-top:20px">	
+			<form method=post action="{{ url_for('look.download_project') }}" enctype="multipart/form-data">
+				<input type="hidden" name="image_to_download" id="inp_img3" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
+				<input type="submit" value="Download" style="width:85px">	
+			</form>
+		</div>
+		<div class="col-sm-1" style="margin-left: 45px;margin-top:20px">
 			<form method=post action="{{ url_for('store.share_project') }}" enctype="multipart/form-data">	
 				<input type="hidden" name="image_to_share" id="inp_img1" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
-				<input type="submit" value="Share" style="width:70px">	
+				<input type="submit" value="Share" style="width:80px">	
 			</form>
 		</div>
 		<div class="col-sm-1" style="margin-left: 40px;margin-top:20px">	
 			<form method=post action="{{ url_for('store.save_project') }}" enctype="multipart/form-data">
 				<input type="hidden" name="image_to_save" id="inp_img2" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
-				<input type="submit" value="Save" style="width:70px">	
+				<input type="submit" value="Save" style="width:80px">	
 			</form>
 		</div>
 	</div>
