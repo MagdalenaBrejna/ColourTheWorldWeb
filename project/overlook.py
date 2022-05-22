@@ -85,9 +85,9 @@ def download_project():
 
 # convert a given binary text from the database into a file
 def convert_data(data, file_name):
-    with open(file_name, 'wb') as file:
+    with open("project\\static\\uploads\\" + file_name, 'wb') as file:
         file.write(data)
-        return file.name   
+        return file.name[8:]   
 
 # save a selected colouring book in a selected directory
 def save_project(image, filename):

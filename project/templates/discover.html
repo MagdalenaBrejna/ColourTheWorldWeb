@@ -34,7 +34,7 @@
       <form  action="{{ url_for('look.download', filename=i) }}" enctype="multipart/form-data">
         <div class="card" style="margin-bottom:20px;width:180px;height:180px">
           <input type="hidden" name="image" id="image" src="{{ url_for('look.download', filename=i) }}" value="{{ url_for('look.download', filename=i) }}">
-          <input id="selected" type="image" src="{{ url_for('static', filename='uploads/' + i) }}" style="width:180px;height:180px"/>
+          <input id="selected" type="image" src="{{ i }}" style="width:180px;height:180px"/>
         </div>
     </form>
     </div>
