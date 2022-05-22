@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template,request
 from flask_login import login_required
-from models import SharedImageModel, UserImageModel, db
+from models import SharedImageModel, UserImageModel
 from tkinter import filedialog
 from tkinter import *
 from flask_login import current_user
 import os
-from PIL import Image
 
 # application module for colouring overlook and download
 
