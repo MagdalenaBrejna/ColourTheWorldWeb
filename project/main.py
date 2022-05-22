@@ -5,6 +5,7 @@ import os
 
 # application configuration module
 
+
 # initialize application
 app = Flask(__name__)
 app.secret_key = 'xyz'
@@ -39,14 +40,14 @@ app.register_blueprint(create_img)
 # set login view
 login.login_view = 'auth.login'
 
-# application configuration requests
+# application database configuration request
 @app.before_first_request
 def create_all():
     db.create_all() 
 
 @app.route('/favicon.ico')  
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')  
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype = 'image/vnd.microsoft.icon')  
 
 # run application
 if __name__ == '__main__':
