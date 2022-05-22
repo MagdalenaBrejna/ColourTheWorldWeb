@@ -71,6 +71,20 @@ def show_created():
     filename = request.form.get("image")
     return render_template('created.html', filename = filename)
 
+
+# show tamplate that display a created colouring book for logged in user    
+@create_img.route('/createduser')
+def show_created_temp_for_login():
+    return render_template('newCreated.html')	
+
+# show a colouring book request. Application gets an image from html
+# form and sends it back to the browser to show a conversion result
+# for logged in user.
+@create_img.route('/createduser', methods=['POST'])
+def show_created_for_login():
+    filename = request.form.get("image")
+    return render_template('newCreated.html', filename = filename)	
+
    
 # send stored image of the given filename into browser
 @create_img.route('/<filename>')

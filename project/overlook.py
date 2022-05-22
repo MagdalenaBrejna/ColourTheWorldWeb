@@ -75,11 +75,21 @@ def download_published(filename):
 @look.route('/saveproject', methods=['POST'])
 def download_project():
     image = request.form.get("image_to_download")
+    download_image(image)
+    return render_template('created.html', filename = image[1:])
+
+# save an unsaved and unpublished colouring book into a selected directory in computer files (download) for logged in user
+@look.route('/saveprojectuser', methods=['POST'])
+def download_project_for_login():
+    image = request.form.get("image_to_download")
+    download_image(image)
+    return render_template('newCreated.html', filename = image[1:])  
+
+def download_image(image):      
     with open("project\\static\\uploads\\" + image[1:], 'rb') as file:
         img = file.read()
     with open(os.path.join(getUserDirectoryPath(), image[1:]), 'wb') as file:
         file.write(img)
-    return render_template('created.html', filename = image[1:])
 
 
 

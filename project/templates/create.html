@@ -6,3 +6,37 @@
 <a class="nav-link" href="/published">Discover</a>
 <a class="nav-link" href="/logout">Log Out</a>
 {% endblock %}
+
+
+{% block main_content %}
+<p></p>
+<h1>Create your own colouring book</h1>
+<br>
+<p></p>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+
+<form action="/" class="dropzone" id="dropzone" style="height:300px;color:rgb(198, 196, 196);border-style:dashed">
+	<div class="dz-message" data-dz-message style="font-size:20px;margin-top: 30px;padding-top: 80px;"><span style="color:rgba(128, 128, 128, 0.712)">Drop files here to upload</span></div>		
+</form>
+<form method=post action="{{ url_for('create_img.show_created_for_login') }}" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="hidden" name="image" id="formFile">
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Create" >
+	</p>
+</form>	
+
+{% endblock %}
