@@ -58,8 +58,8 @@
 	{% endwith %}
 </p>
 
-<form action="/" class="dropzone" id="dropzone" style="height:300px;color:rgb(198, 196, 196);border-style:dashed">
-	<div class="dz-message" data-dz-message style="font-size:20px;margin-top: 30px;padding-top: 80px;"><span style="color:rgba(128, 128, 128, 0.712)">Drop files here to upload</span></div>		
+<form action="/" class="dropzone" id="dropzone" style="height:300px;color:rgb(198, 196, 196);border-style:dashed;border-color:rgb(84, 82, 82);opacity:0.8;border-width: 3px;font-size: large;">
+	<div class="dz-message" data-dz-message style="font-size:25px;margin-top: 30px;padding-top: 80px;"><span style="color:rgba(128, 128, 128, 0.712)">Drop files here to upload</span></div>		
 </form>
 <form method=post action="{{ url_for('create_img.show_created') }}" enctype="multipart/form-data">
     <dl>
@@ -68,7 +68,7 @@
 		</p>
     </dl>
     <p>
-		<input type="submit" value="Create" >
+		<input type="submit" value="Create" style="background-color:#F8F8F8;width:80px;height:40px;border-color:rgb(84, 82, 82);color:rgb(84, 82, 82);font-size: large;">
 	</p>
 </form>	
 

@@ -41,25 +41,25 @@
 
 {% if filename %}
 
-<img id="img1" src="{{ url_for('create_img.display_image', filename=filename) }}" style="height: 400px;width:400px" >
+<img id="img1" src="{{ url_for('create_img.display_image', filename=filename) }}" style="height: 400px;width:400px;border:2px solid rgb(84, 82, 82)" >
 <div class="container">
 	<div class="row">
 		<div class="col-sm-1" style="margin-left: 150px;margin-top:20px">	
 			<form method=post action="{{ url_for('look.download_project') }}" enctype="multipart/form-data">
 				<input type="hidden" name="image_to_download" id="inp_img3" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
-				<input type="submit" value="Download" style="width:85px">	
+				<input type="submit" value="Download" style="width:85px;background-color:#F8F8F8;border-color:rgb(84, 82, 82);color:rgb(84, 82, 82)">	
 			</form>
 		</div>
 		<div class="col-sm-1" style="margin-left: 45px;margin-top:20px">
 			<form method=post action="{{ url_for('store.share_project') }}" enctype="multipart/form-data">	
 				<input type="hidden" name="image_to_share" id="inp_img1" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
-				<input type="submit" value="Share" style="width:80px">	
+				<input type="submit" value="Share" style="width:80px;background-color:#F8F8F8;border-color:rgb(84, 82, 82);color:rgb(84, 82, 82)">	
 			</form>
 		</div>
 		<div class="col-sm-1" style="margin-left: 40px;margin-top:20px">	
 			<form method=post action="{{ url_for('store.save_project') }}" enctype="multipart/form-data">
 				<input type="hidden" name="image_to_save" id="inp_img2" src="{{ url_for('create_img.display_image', filename=filename) }}" value="{{ url_for('create_img.display_image', filename=filename) }}">
-				<input type="submit" value="Save" style="width:80px">	
+				<input type="submit" value="Save" style="width:80px;background-color:#F8F8F8;border-color:rgb(84, 82, 82);color:rgb(84, 82, 82)">	
 			</form>
 		</div>
 	</div>
