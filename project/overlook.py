@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template,request
+from flask import Blueprint, render_template,request,redirect
 from flask_login import login_required
 from models import SharedImageModel, UserImageModel
 from tkinter import filedialog
@@ -29,9 +29,9 @@ def get_user_images():
 # save a user colouring book selected by a user into a selected directory in computer files (download)
 @look.route('/get/<filename>')
 def download_user(filename):
-    image = UserImageModel.query.filter_by(user = current_user.id, title = filename).first()
-    save_project(image, filename)
-    return render_template('projects.html', images = get_user_images())
+    image = UserImageModel.query.filter_by(user = current_user.id, title = filename[15:]).first()
+    save_project(image, filename[15:])
+    return redirect('/projects')
 
 
 
@@ -51,9 +51,10 @@ def get_published_images():
 # save a colouring book selected by a user into a selected directory in computer files (download)
 @look.route('/download/<filename>')
 def download(filename):
-    image = SharedImageModel.query.filter_by(title = filename).first()
-    save_project(image, filename)
-    return render_template('discover.html', images = get_published_images())
+    image = SharedImageModel.query.filter_by(title = filename[15:]).first()
+    save_project(image, filename[15:])
+    return redirect('/discover')
+    #return render_template('discover.html', images = get_published_images())
 
 
 
@@ -65,9 +66,9 @@ def show_published():
 # save a colouring book selected by a user into a selected directory in computer files (download)
 @look.route('/public/<filename>')
 def download_published(filename):
-    image = SharedImageModel.query.filter_by(title = filename).first()
-    save_project(image, filename)
-    return render_template('published.html', images = get_published_images())
+    image = SharedImageModel.query.filter_by(title = filename[15:]).first()
+    save_project(image, filename[15:])
+    return redirect('/published')
 
 
 
