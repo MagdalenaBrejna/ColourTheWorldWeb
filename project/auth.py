@@ -1,6 +1,7 @@
-from flask import Blueprint, flash, request, redirect, render_template
+from flask import Blueprint, request, redirect, render_template
 from flask_login import current_user, login_user, logout_user
 from models import UserModel, db
+from exceptions import AuthenticationException
 
 # application authorization module
 
@@ -23,7 +24,10 @@ def login():
             login_user(user)
             return redirect('/projects')
         else:
-            flash('Wrong login or password')    
+            try:
+                raise AuthenticationException('Wrong login or password')
+            finally:
+                return render_template('login.html')          
                 
     return render_template('login.html')
 
@@ -41,17 +45,20 @@ def register():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
- 
+
         if UserModel.query.filter_by(email = email).first():
-            flash('Email already Present')
-        else:    
+            try:
+                raise AuthenticationException('Email already present')
+            finally:
+                return render_template('register.html')
+        else:
             user = UserModel(email = email, username = username)
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
-            return redirect('/login')
+            return redirect('/login')  
+    return render_template('register.html')             
 
-    return render_template('register.html')
  
 # logout requst. Process user logout and redirect him to login page. 
 @auth.route('/logout')

@@ -5,6 +5,7 @@ from tkinter import filedialog
 from tkinter import *
 from flask_login import current_user
 import os
+from exceptions import DownloadException
 
 # application module for colouring books overlook and download
 
@@ -30,8 +31,12 @@ def get_user_images():
 @look.route('/get/<filename>')
 def download_user(filename):
     image = UserImageModel.query.filter_by(user = current_user.id, title = filename[15:]).first()
-    save_project(image, filename[15:])
-    return redirect('/projects')
+    try:
+        save_project(image, filename[15:])
+    except FileNotFoundError:
+        raise DownloadException(image[1:])
+    finally:
+        return redirect('/projects')
 
 
 
@@ -52,9 +57,12 @@ def get_published_images():
 @look.route('/download/<filename>')
 def download(filename):
     image = SharedImageModel.query.filter_by(title = filename[15:]).first()
-    save_project(image, filename[15:])
-    return redirect('/discover')
-    #return render_template('discover.html', images = get_published_images())
+    try:
+        save_project(image, filename[15:])
+    except FileNotFoundError:
+        raise DownloadException(image[1:])
+    finally:        
+        return redirect('/discover')
 
 
 
@@ -67,26 +75,38 @@ def show_published():
 @look.route('/public/<filename>')
 def download_published(filename):
     image = SharedImageModel.query.filter_by(title = filename[15:]).first()
-    save_project(image, filename[15:])
-    return redirect('/published')
+    try:
+        save_project(image, filename[15:])
+    except FileNotFoundError:
+        raise DownloadException(image[1:])
+    finally:        
+        return redirect('/published')
 
 
 
 # save an unsaved and unpublished colouring book into a selected directory in computer files (download)
 @look.route('/saveproject', methods=['POST'])
 def download_project():
-    image = request.form.get("image_to_download")
-    download_image(image)
-    return render_template('created.html', filename = image[1:])
+    try:
+        image = request.form.get("image_to_download")
+        download_image(image)
+    except FileNotFoundError:
+        raise DownloadException(image[1:])
+    finally:    
+        return render_template('created.html', filename = image[1:])
 
 # save an unsaved and unpublished colouring book into a selected directory in computer files (download) for logged in user
 @look.route('/saveprojectuser', methods=['POST'])
 def download_project_for_login():
-    image = request.form.get("image_to_download")
-    download_image(image)
-    return render_template('newCreated.html', filename = image[1:])  
+    try:
+        image = request.form.get("image_to_download")
+        download_image(image)
+    except FileNotFoundError:
+        raise DownloadException(image[1:])
+    finally:    
+        return render_template('newCreated.html', filename = image[1:])  
 
-def download_image(image):      
+def download_image(image):
     with open("project\\static\\uploads\\" + image[1:], 'rb') as file:
         img = file.read()
     with open(os.path.join(getUserDirectoryPath(), image[1:]), 'wb') as file:

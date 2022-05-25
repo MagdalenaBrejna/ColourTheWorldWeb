@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, request, redirect, render_template
 from models import db, SharedImageModel, UserImageModel
 from flask_login import current_user
+from exceptions import AuthenticationException
 
 # application module for processing storing a colouring book
 
@@ -15,6 +16,19 @@ store = Blueprint('store', __name__)
 @store.route('/save', methods=['POST'])
 def save_project():
     # if user is not authorized redirect him to the login page
+    '''
+    if not current_user.is_authenticated:
+        try:
+            raise AuthenticationException('You must be logged in')
+        finally:
+            return render_template('login.html')
+
+    filename = request.form.get("image_to_save")
+    if save_image(filename):
+        return redirect('/projects')
+    else:                          
+        return render_template('created.html', filename = filename[1:])         
+    '''
     if not current_user.is_authenticated:
         flash("You must be logged in")
         return redirect('/login')
@@ -24,6 +38,7 @@ def save_project():
         return redirect('/projects')
     else:                          
         return render_template('created.html', filename = filename[1:]) 
+       
 
 
 # save a colouring on an authorized user's profile. If user is not authorized redirect him to login page. Otherwise, 
