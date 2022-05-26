@@ -28,7 +28,6 @@ class DownloadException(MyDialogException):
     def __init__(self, value):
         MyDialogException.__init__(self, value)
         self._show_dialog("Download Error", "File %s cannot be downloaded" % (self._value))
-        #messagebox.showerror(title = "Download Error", message = "File %s cannot be downloaded" % (self.value))
 
 
 class MyFlashException(MyException):
