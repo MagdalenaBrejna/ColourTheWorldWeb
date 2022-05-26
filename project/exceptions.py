@@ -7,7 +7,7 @@ class MyException(Exception):
         self._value = value
 
 
-class MyDialogException(Exception):
+class MyDialogException(MyException):
     def __init__(self, value):
         MyException.__init__(self, value)
         self.__create_dialog()
@@ -19,21 +19,16 @@ class MyDialogException(Exception):
 
     def _show_dialog(self, tit, mess):
         messagebox.showerror(title = tit, message = mess) 
-        self._destroy_dialog()  
+        self.__destroy_dialog()  
 
-    def _destroy_dialog(self):
+    def __destroy_dialog(self):
         self.__tk.destroy()    
 
 class DownloadException(MyDialogException):
     def __init__(self, value):
         MyDialogException.__init__(self, value)
-        self._show_dialog("Download Error", "File %s cannot be downloaded" % (self.value))
+        self._show_dialog("Download Error", "File %s cannot be downloaded" % (self._value))
         #messagebox.showerror(title = "Download Error", message = "File %s cannot be downloaded" % (self.value))
-        
-class NoSuchImageException(MyDialogException):
-    def __init__(self, value):
-        MyDialogException.__init__(self, value)
-        self._show_dialog("Image Error", "Image %s doesn't exists" % (self.value))
 
 
 class MyFlashException(MyException):

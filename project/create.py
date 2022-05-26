@@ -4,6 +4,7 @@ from flask_login import login_required
 from werkzeug.utils import secure_filename
 from PIL import Image
 import cv2
+from exceptions import ImageException
 
 # application module for colouring book creation
 
@@ -33,30 +34,38 @@ def create():
 @create_img.route('/', methods=['POST'])
 def upload_image():
 	if 'file' not in request.files:
-		flash('No file part')
-		return redirect(request.url)
+		try:
+			raise ImageException("No file part", "make.html")
+		finally:
+			redirect(request.url)	
 
 	file = request.files['file']
 	if file.filename == '':
-		flash('No image selected for uploading')
-		return redirect(request.url)
+		try:
+			raise ImageException("No image selected for uploading", "make.html")
+		finally:
+			redirect(request.url)	
 	else:
 		# save an input image
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-		# create a colouring book
-		image_matrix = cv2.imread(os.path.join(UPLOAD_FOLDER, filename))
-		image = cv2.cvtColor(image_matrix , cv2.COLOR_RGB2GRAY)
-		dst = cv2.GaussianBlur(image, (3, 3), cv2.BORDER_DEFAULT, 0.5)
-		laplacian = cv2.Laplacian(dst, -10, 3)
-		laplacian = 255 - laplacian
+		try:
+			image_matrix = cv2.imread(os.path.join(UPLOAD_FOLDER, filename))
+		except Exception:
+			raise ImageException("Invalid image", "make.html")	
+		else:	
+			# create a colouring book
+			image = cv2.cvtColor(image_matrix , cv2.COLOR_RGB2GRAY)
+			dst = cv2.GaussianBlur(image, (3, 3), cv2.BORDER_DEFAULT, 0.5)
+			laplacian = cv2.Laplacian(dst, -10, 3)
+			laplacian = 255 - laplacian
 
-		# save a ready image
-		data = Image.fromarray(laplacian)
-		data.save(os.path.join(UPLOAD_FOLDER, filename))
-
-		return render_template('make.html', filename = filename)
+			# save a ready image
+			data = Image.fromarray(laplacian)
+			data.save(os.path.join(UPLOAD_FOLDER, filename))
+		finally:
+			return render_template('make.html', filename = filename)
 
 
 # show tamplate that display a created colouring book      
@@ -68,8 +77,13 @@ def show_created_temp():
 # form and sends it back to the browser to show a conversion result.
 @create_img.route('/created', methods=['POST'])
 def show_created():
-    filename = request.form.get("image")
-    return render_template('created.html', filename = filename)
+	filename = request.form.get("image")
+	if filename == '':
+		try:
+			raise ImageException("Image cannot be empty", "make.html")
+		finally:	
+			return render_template('make.html')
+	return render_template('created.html', filename = filename)
 
 
 # show tamplate that display a created colouring book for logged in user    
@@ -82,8 +96,13 @@ def show_created_temp_for_login():
 # for logged in user.
 @create_img.route('/createduser', methods=['POST'])
 def show_created_for_login():
-    filename = request.form.get("image")
-    return render_template('newCreated.html', filename = filename)	
+	filename = request.form.get("image")
+	if filename == '':
+		try:
+			raise ImageException("Image cannot be empty", "create.html")
+		finally:	
+			return render_template('create.html')
+	return render_template('newCreated.html', filename = filename)	
 
    
 # send stored image of the given filename into browser
